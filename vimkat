@@ -1,0 +1,39 @@
+#!/bin/bash
+
+[[ $1 ]] || 
+	{
+	echo "
+NAME
+	vimkat - render a file via Vim
+
+SYNOPSIS
+	vimkat input_file [max_lines] [vimrc]
+
+DESCRIPTION
+	Renders a file via Vim ... quite fast
+
+	input_file	the file you want rendered
+	max_lines	the maximum number of lines to render, -1 for all lines
+	vimrc		a vimrc file to use instead for your default vimrc, -1 for vimkat's vimrc
+
+AUTHOR/LICENSE
+	© Nadim Ibn Hamouda El Khemir, 2022. Artistic License 2.0 or Vim's license
+
+SEE ALSO
+	vimcat
+"
+	exit 1
+	}
+
+input="$1" ; max="$2" ; vimrc="$3"
+
+[[ -e "$input" ]] || { echo "vimkat: no such file ${input@Q}" && exit 1 ; }
+vimkat_max="/tmp/vimkat_max_${input##*/}"
+
+[[ -n $max && $max != -1 ]] && head -n "$max" "$input" >"$vimkat_max" && input="$vimkat_max"
+[[ -n "$vimrc" ]] && { [[ "$vimrc" == -1 ]] && vimrc="$HOME/.vimkatrc" ; [[ -e "$vimrc" ]] && vimrc="-u ${vimrc@Q}" ; }
+
+lines=$(wc -l <"$input") ; (( l2 = lines + 10))
+script -o 1000000 -qc "vim $vimrc -R -c':set lines=$l2' +redraw +q ${input@Q}" | sed -e '1s/.*1;1H//' -e "s/~          .*//" 
+
+rm -f typescript "$vimkat_max" 
