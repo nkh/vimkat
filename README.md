@@ -2,12 +2,14 @@
 	vimkat - render a file via Vim
 ## SYNOPSIS
 	vimkat input_file [max_lines] [vimrc]
+	... | vimkat [max_lines] [vimrc] [vim_command]   
 ## DESCRIPTION
 	Renders a file via Vim ... quite fast
 
 	input_file	the file you want rendered
 	max_lines	the maximum number of lines to render, -1 for all lines
 	vimrc		a vimrc file to use instead for your default vimrc, -1 for vimkat's vimrc
+	vim_command	extra argument to vim, eg: "-c 'ft=sh'"
 
 Large bash script rendering:
 ![Screenshot](https://raw.github.com/nkh/vimkat/main/screenshots/time_ftl_full.png)
@@ -42,16 +44,16 @@ vimrc argument your default vimrc is used.
  
 ## PAGER
 
-There's no pager in this distribution but you can: vimkat /tmp/some_file ; less -R /tmp/some_file
+You can use vimkat as a pager:
 
-Some more work is needed to be able to pipe vimkat's output directly to less.
+	$> generate_text | vimkat
 
 ## FZF
 
 My main goal was to have previews in fzf, you can find an example script in the 'fzf' directory.
 
 If you have 'lscolors' installed (https://github.com/sharkdp/lscolors), uncomment the script's
-first line to get the files colored too.
+first line to get the files colored too. ls, fd, ... have options to always colorize their output
 
 ## HELPING/BUGS
 
@@ -69,6 +71,6 @@ Patches/Bug reports are welcome, and it's easy in such a small project, for:
 	mailto: nadim.khemir@gmail.com
 
 ## SEE ALSO
-	vimcat (https://github.com/rkitover/vimpager)
+	vimpager && vimcat (https://github.com/rkitover/vimpager)
 
 
