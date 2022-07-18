@@ -42,11 +42,14 @@ Loading plugins takes time, you can shave of a tenth of a second or so by using 
 third argument 'vimkat' takes a vimrc file or you can pass -1 and it wil use ~/.vimkatrc. If you don't give a
 vimrc argument your default vimrc is used.
  
+## PIPING
+
+You can pipe in vimkat, you may need to help vim with the file type detection:
+
+	$> generate_text | vimkat [max_lines] [vimrc] [vim_command]   
+
 ## PAGER
-
-You can use vimkat as a pager:
-
-	$> generate_text | vimkat
+None yet but it's in the plans
 
 ## FZF
 
