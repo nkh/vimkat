@@ -34,13 +34,14 @@ SEE ALSO
 	|| { tmp_input=1 ; input="/tmp/vimkat_pipe_input_$$" ; cat >"$input" ; max="$1" ; vimrc="$2" ; extra_commands="${@:3}" ; }
 
 
+typescript_file="/tmp/vimkat_typescript_${input##*/}_$$"
 vimkat_max="/tmp/vimkat_max_${input##*/}_$$"
 [[ -n $max && $max != -1 ]] && head -n "$max" "$input" >"$vimkat_max" && input="$vimkat_max"
 
 [[ -n "$vimrc" ]] && { [[ "$vimrc" == -1 ]] && vimrc="$HOME/.vimkatrc" ; [[ -e "$vimrc" ]] && vimrc="-u ${vimrc@Q}" ; }
 
 (( lines = $(wc -l <"$input") + 10))
-COLUMNS="$COLUMNS" script -o 1000000 -qc "vim $vimrc -R -c'set lines=$lines' $extra_commands +redraw +q ${input@Q}" | sed -e '1s/.*1;1H//' -e "s/~          .*//" 
+COLUMNS="$COLUMNS" script -o 1000000 -qc "vim $vimrc -R -c'set lines=$lines' $extra_commands +redraw +q ${input@Q}" "$typescript_file" | sed -e '1s/.*1;1H//' -e "s/~          .*//" 
 
-rm -f typescript "$vimkat_max" ; ((tmp_imput)) && rm "$input" 
+rm -f "$typescript_file" "$vimkat_max" ; ((tmp_imput)) && rm "$input" 
 true
