@@ -41,7 +41,9 @@ vimkat_max="/tmp/vimkat_max_${input##*/}_$$"
 [[ -n "$vimrc" ]] && { [[ "$vimrc" == -1 ]] && vimrc="$HOME/.vimkatrc" ; [[ -e "$vimrc" ]] && vimrc="-u ${vimrc@Q}" ; }
 
 (( lines = $(wc -l <"$input") + 10))
+echo -en "\e[1;1H\e[2J"
 COLUMNS="$COLUMNS" script -o 1000000 -qc "vim $vimrc -R -c'set lines=$lines' $extra_commands +redraw +q ${input@Q}" "$typescript_file" | sed -e '1s/.*1;1H//' -e "s/~          .*//" 
+echo -en "\e[?25h"
 
 rm -f "$typescript_file" "$vimkat_max" ; ((tmp_imput)) && rm "$input" 
 true
