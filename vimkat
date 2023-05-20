@@ -31,11 +31,11 @@ SEE ALSO
 		input="$1" ; [[ -e "$input" ]] || { echo "vimkat: no such file ${input@Q}" >&2 && exit 1 ; }
 		tmp_input= ; max="$2" ; vimrc="$3" ; extra_commands="${@:4}"
 		} \
-	|| { tmp_input=1 ; input="/tmp/vimkat_pipe_input_$$" ; cat >"$input" ; max="$1" ; vimrc="$2" ; extra_commands="${@:3}" ; }
+	|| { tmp_input=1 ; input="$(mktemp -p /tmp vimkat_pipe_input-XXXXXXXX)" || exit 1 ; cat >"$input" ; max="$1" ; vimrc="$2" ; extra_commands="${@:3}" ; }
 
+typescript_file="$(mktemp -p /tmp vimkat_typescript_${input##*/}-XXXXXXXX)" || exit 1
+vimkat_max="$(mktemp -p /tmp vimkat_max_${input##*/}-XXXXXXXX)" || exit 1
 
-typescript_file="/tmp/vimkat_typescript_${input##*/}_$$"
-vimkat_max="/tmp/vimkat_max_${input##*/}_$$"
 [[ -n $max && $max != -1 ]] && head -n "$max" "$input" >"$vimkat_max" && input="$vimkat_max"
 
 [[ -n "$vimrc" ]] && { [[ "$vimrc" == -1 ]] && vimrc="$HOME/.vimkatrc" ; [[ -e "$vimrc" ]] && vimrc="-u ${vimrc@Q}" ; }
