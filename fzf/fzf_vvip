@@ -7,5 +7,5 @@ fzf -e -m --info=inline --ansi --color="hl:51" --no-sort --layout=reverse-list -
 	--preview-window='right:50%' \
 	--preview '\
 		[[ -d {} ]] && ls -AgGh --group-directories-first --color=always {} || \
-		{ perl -le "if (-B \$ARGV[0]) { exit 1 } else { exit 0 }" -- {} && vimkat {} 100 -1 || file {} ; } '
+		{ perl -le "if (-B \$ARGV[0]) { exit 1 } else { exit 0 }" -- {} && tvcat {} 100 -1 || file {} ; } '
 

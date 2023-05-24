@@ -1,8 +1,14 @@
 ## NAME
 	vimkat - render a file via Vim
+	tvcat  - render a file via Vim in Tmux
+
 ## SYNOPSIS
 	vimkat input_file [max_lines] [vimrc]
 	... | vimkat [max_lines] [vimrc] [vim_command]   
+
+	tvcat input_file [max_lines]
+	... | vimkat [max_lines] | pager
+   
 ## DESCRIPTION
 	Renders a file via Vim ... quite fast
 
@@ -23,18 +29,21 @@ preview my files the _same way_ I'd see them in my $EDITOR (vim of course).
 After a short discussion with Rafael Kitover, of vimpager's fame, I decided to dig in, this
 is the first beta release of 'vimkat', more releases to fix some bug will come continuously.
 
+I've also writen 'tvcat' which is a bit faster but work only in tmux.
+
 ## SPEED
 
-Expect at least 3 times faster rendering speed, with an average of ten times and for some files 50! times.
+Expect at least 3 times faster rendering speed for vimkat, with an average of ten times and for some
+files 50! times. Speed can be 2 to 5 times faster with tvcat than vimkat.
 
-in the example directory you'll find bash_ftl which is a large, very syntax heavy, file which takes 25 seconds
-to render (on my machine) with vimcat and 0.5 secons with vimkat.
+in the example directory you'll find bash_ftl which is a large, very syntax heavy, file which takes 15 seconds
+to render (on my machine) with vimcat and 0.6 second with vimkat and 0.3 second with tvcat.
 
 I'm of course interested in hearing about the performances with other types of files and other machines
 
 ### Partial Rendering
 
-if you want took at only the top part of a file you can pass a length argument to 'vimkat' to speed it up.
+if you want took at only the top part of a file you can pass a length argument to speed it up things a bit.
 
 ### No plugins
 
@@ -44,12 +53,14 @@ vimrc argument your default vimrc is used.
  
 ## PIPING
 
-You can pipe in vimkat, you may need to help vim with the file type detection:
+You can pipe in vimkat and tvcat, you may need to help vim with the file type detection:
 
 	$> generate_text | vimkat [max_lines] [vimrc] [vim_command]   
+	$> generate_text | tvcat [max_lines]    
 
 ## PAGER
-None yet but it's in the plans
+
+Output from tvcat can be passed to a pager, vimkat may generate code the pager doesn't handle.
 
 ## FZF
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 tmux has-session -t tvcat 2>/dev/null || \
-	{ echo tvcat: starting server >&2 ; tmux new-session -x 80 -y 20 -d -s tvcat 'vim --servername tvcat' ; sleep .5 ; tmux resize-window -t tvcat:0 -y 1500 ; }
+	{ echo tvcat: starting server >&2 ; tmux new-session -x 80 -y 20 -d -s tvcat 'vim --servername tvcat' ; sleep 1 ; tmux resize-window -t tvcat:0 -y 1500 ; }
 
 [[ -t 0 || -f "$1" ]] \
 	&& { tmp_input= ; input="$1" ; [[ -f "$input" ]] || { echo "tvcat: no such file ${input@Q}" >&2 && exit 1 ; } ; max="$2" ; } \
