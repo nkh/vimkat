@@ -34,7 +34,7 @@ SEE ALSO
 	|| { tmp_input=1 ; input="$(mktemp -p /tmp vimkat_pipe_input-XXXXXXXX)" || exit 1 ; cat >"$input" ; max="$1" ; vimrc="$2" ; extra_commands="${@:3}" ; }
 
 typescript_file="$(mktemp -p /tmp "vimkat_typescript_${input##*/}-XXXXXXXX")" || exit 1
-vimkat_max="$(mktemp -p "/tmp vimkat_max_${input##*/}-XXXXXXXX")" || exit 1
+vimkat_max="$(mktemp -p /tmp "vimkat_max_${input##*/}-XXXXXXXX")" || exit 1
 
 [[ -n $max && $max != -1 ]] && head -n "$max" "$input" >"$vimkat_max" && input="$vimkat_max"
 
