@@ -13,7 +13,7 @@ tvcat_max="$(mktemp -p /tmp "tvcat_max_${input##*/}-XXXXXXXX")" || exit 1
 [[ -n $max && $max != -1 ]] && head -n "$max" "$input" >"$tvcat_max" && input="$tvcat_max"
 
 mkdir -p /tmp/tvcat_dir ; rm -rf /tmp/tvcat_dir/*
-vim --servername tvcat --remote-send ":view $input|redraw|w /tmp/tvcat_dir/tvcat_done<CR>" 
+vim --servername tvcat --remote-send ":view $input| set nornu | set nospell | set nowrap | redraw | w /tmp/tvcat_dir/tvcat_done<CR>" 
 [[ -f /tmp/tvcat_dir/tvcat_done ]] || inotifywait -e create /tmp/tvcat_dir &>/dev/null 
 
 tmux capture-pane -e -t tvcat:0 -p >/tmp/tvcat ;
