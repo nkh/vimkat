@@ -3,21 +3,28 @@
 tmux has-session -t tvcat 2>/dev/null || \
 	{ echo tvcat: starting server >&2 ; tmux new-session -x 80 -y 20 -d -s tvcat 'vim --servername tvcat' ; sleep 1 ; tmux resize-window -t tvcat:0 -y 1500 ; }
 
+
+
+mkdir -p /tmp/tvcat_cache
+
 [[ -t 0 || -f "$1" ]] \
 	&& { tmp_input= ; input="$1" ; [[ -f "$input" ]] || { echo "tvcat: no such file ${input@Q}" >&2 && exit 1 ; } ; max="$2" ; } \
 	|| { tmp_input=1 ; input="$(mktemp -p /tmp tvcat_pipe_input-XXXXXXXX)" || exit 1 ; cat >"$input" ; max="$1" ; }
 
 input="$(realpath "$input")"
+cache="/tmp/tvcat_cache/$(md5sum "$input" | cut -d' ' -f1)"
 
-tvcat_max="$(mktemp -p /tmp "tvcat_max_${input##*/}-XXXXXXXX")" || exit 1
-[[ -n $max && $max != -1 ]] && head -n "$max" "$input" >"$tvcat_max" && input="$tvcat_max"
+[[ -f $cache ]] && cat $cache ||
+	{
+	tvcat_max="$(mktemp -p /tmp "tvcat_max_${input##*/}-XXXXXXXX")" || exit 1
+	[[ -n $max && $max != -1 ]] && head -n "$max" "$input" >"$tvcat_max" && input="$tvcat_max"
 
-mkdir -p /tmp/tvcat_dir ; rm -rf /tmp/tvcat_dir/*
-vim --servername tvcat --remote-send ":view $input| set nornu | set nospell | set nowrap | redraw | w /tmp/tvcat_dir/tvcat_done<CR>" 
-[[ -f /tmp/tvcat_dir/tvcat_done ]] || inotifywait -e create /tmp/tvcat_dir &>/dev/null 
+	mkdir -p /tmp/tvcat_dir ; rm -rf /tmp/tvcat_dir/*
+	vim --servername tvcat --remote-send ":setl autoread | view $input | set nornu | set nospell | set nowrap | redraw | w /tmp/tvcat_dir/tvcat_done<CR>" 
+	[[ -f /tmp/tvcat_dir/tvcat_done ]] || inotifywait -e create /tmp/tvcat_dir &>/dev/null 
 
-tmux capture-pane -e -t tvcat:0 -p >/tmp/tvcat ;
-head -n ${max:-$(wc -l "$input" | cut -d' ' -f1)} /tmp/tvcat
+	tmux capture-pane -e -t tvcat:0 -p >/tmp/tvcat ;
+	head -n ${max:-$(wc -l "$input" | cut -d' ' -f1)} /tmp/tvcat | tee >$cache
 
-rm -f "$tvcat_max" ; ((tmp_imput)) && rm "$input" 
-
+	rm -f "$tvcat_max" ; ((tmp_imput)) && rm "$input" 
+	}
